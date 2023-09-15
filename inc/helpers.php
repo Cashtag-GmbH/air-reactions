@@ -1,5 +1,12 @@
 <?php
 /**
+ * @Author: Erik Reifer
+ * @Date:   2023-09-15 10:13:01
+ * @Last Modified by:   Erik Reifer
+ * @Last Modified time: 2023-09-15 10:45:04
+ */
+
+/**
  * Helper functions
  *
  * @package air-reactions
@@ -62,7 +69,7 @@ function has_user_reacted( $post_id, int $user_id ) {
 function get_types() {
   $default_types = [
     'heart' => [
-      'icon_path' => plugin_dir_path( __DIR__ ) . 'svg/heart.svg',
+      'emoji' => '💚',
       'texts'     => [
         'reaction'   => __( 'Love this post', 'air-reactions' ),
         'amount_pre' => __( 'Loved', 'air-reactions' ),
@@ -70,7 +77,7 @@ function get_types() {
       ],
     ],
     'like' => [
-      'icon_path' => plugin_dir_path( __DIR__ ) . 'svg/thumbs-up.svg',
+      'emoji' => '👍',
       'texts'     => [
         'reaction'   => __( 'Like this post', 'air-reactions' ),
         'amount_pre' => __( 'Liked', 'air-reactions' ),
@@ -78,7 +85,7 @@ function get_types() {
       ],
     ],
     'dislike' => [
-      'icon_path' => plugin_dir_path( __DIR__ ) . 'svg/thumbs-down.svg',
+      'emoji' => '👎',
       'texts'     => [
         'reaction'   => __( 'Dislike this post', 'air-reactions' ),
         'amount_pre' => __( 'Disliked', 'air-reactions' ),

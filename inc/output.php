@@ -1,5 +1,12 @@
 <?php
 /**
+ * @Author: Erik Reifer
+ * @Date:   2023-09-15 10:13:01
+ * @Last Modified by:   Erik Reifer
+ * @Last Modified time: 2023-09-15 10:48:19
+ */
+
+/**
  * Output functions
  *
  * @package air-reactions
@@ -76,40 +83,38 @@ function reaction_item( string $key, array $item ) {
 
   ob_start();
   ?>
+    <div class="<?php echo esc_attr( join( ' ', $classes ) ); ?>"
+      data-air-reaction-item="<?php echo esc_attr( $key ); ?>">
 
-  <div class="<?php echo esc_attr( join( ' ', $classes ) ); ?>"
-    data-air-reaction-item="<?php echo esc_attr( $key ); ?>">
-
-    <button type="button" class="air-reaction__button">
-
-      <span class="screen-reader-text">
-        <?php echo esc_html( $item['texts']['reaction'] ); ?>
-      </span>
-      <?php include $item['icon_path']; ?>
-
-    </button>
-
-    <?php if ( $show_item_count ) : ?>
-      <div class="air-reaction__item-count">
+      <button type="button" class="air-reaction__button">
 
         <span class="screen-reader-text">
-          <?php echo esc_html( $item['texts']['amount_pre'] ); ?>
+          <?php echo esc_html( $item['texts']['reaction'] ); ?>
         </span>
+        <?php echo esc_html( $item['emoji'] );  ?>
 
-        <span class="air-reaction__item-amount"
-        data-air-reaction-count="<?php echo esc_attr( $item['reactions'] ); ?>">
-          <?php echo esc_html( $item['reactions'] ); ?>
-        </span>
+      </button>
 
-        <span class="screen-reader-text">
-          <?php echo esc_html( $item['texts']['amount_post'] ); ?>
-        </span>
+      <?php if ( $show_item_count ) : ?>
+        <div class="air-reaction__item-count">
 
-      </div><!-- air-reaction__item-count -->
-    <?php endif; ?>
+          <span class="screen-reader-text">
+            <?php echo esc_html( $item['texts']['amount_pre'] ); ?>
+          </span>
 
-  </div><!-- .air-reactions__item -->
+          <span class="air-reaction__item-amount"
+          data-air-reaction-count="<?php echo esc_attr( $item['reactions'] ); ?>">
+            <?php echo esc_html( $item['reactions'] ); ?>
+          </span>
 
+          <span class="screen-reader-text">
+            <?php echo esc_html( $item['texts']['amount_post'] ); ?>
+          </span>
+
+        </div><!-- air-reaction__item-count -->
+      <?php endif; ?>
+
+    </div><!-- .air-reactions__item -->
   <?php
 
   $output = ob_get_clean();
@@ -129,6 +134,7 @@ function container_start( array $args, int $current_user_id ) {
     data-air-reaction-id="<?php echo esc_attr( $args['post_id'] ); ?>"
     data-air-reaction-user="<?php echo esc_attr( $current_user_id ); ?>"
     data-air-reaction-user-reaction="<?php echo esc_attr( has_user_reacted( $args['post_id'], $current_user_id ) ); ?>">
+  <span class="reaction-title"><?php echo __('Auf diesen Post reagieren', 'cashtag' ); ?>: </span>
   <?php
   $output = ob_get_clean();
 
