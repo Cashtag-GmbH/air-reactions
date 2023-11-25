@@ -3,7 +3,7 @@
  * @Author: Erik Reifer
  * @Date:   2023-09-15 10:13:01
  * @Last Modified by:   Erik Reifer
- * @Last Modified time: 2023-09-15 10:48:19
+ * @Last Modified time: 2023-11-25 20:06:22
  */
 
 /**
@@ -28,6 +28,7 @@ function the_output( array $args ) {
     'types'      => (array) \array_keys( get_types() ),
     'post_id'    => (int) \get_the_ID(),
     'echo'       => (bool) true,
+    'label'       => (string) __('Auf diesen Post reagieren: ', 'cashtag' ),
   ];
 
   $args = \wp_parse_args( $args, $default_args );
@@ -134,7 +135,7 @@ function container_start( array $args, int $current_user_id ) {
     data-air-reaction-id="<?php echo esc_attr( $args['post_id'] ); ?>"
     data-air-reaction-user="<?php echo esc_attr( $current_user_id ); ?>"
     data-air-reaction-user-reaction="<?php echo esc_attr( has_user_reacted( $args['post_id'], $current_user_id ) ); ?>">
-  <span class="reaction-title"><?php echo __('Auf diesen Post reagieren', 'cashtag' ); ?>: </span>
+  <span class="reaction-title"><?php echo $args['label']; ?></span>
   <?php
   $output = ob_get_clean();
 
