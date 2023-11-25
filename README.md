@@ -23,6 +23,7 @@ Available parameters are:
     'echo'    => (bool),
     'types'   => (array),
     'post_id' => (int),
+    'label' => (string),
   ]
 ```
 #### Example:
