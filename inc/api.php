@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The API functionality
  *
@@ -12,7 +13,8 @@ use WP_Error;
 /**
  * Register the REST API route for reactions
  */
-function register_reaction_api() {
+function register_reaction_api()
+{
   register_rest_route(
     REST_NAMESPACE,
     REST_ROUTE,
@@ -29,19 +31,29 @@ function register_reaction_api() {
  *
  * @param object $request The REST API request
  */
-function save_reaction_callback( $request ) {
-  if ( empty( $request->get_param( 'id' ) ) || empty( $request->get_param( 'type' ) ) ) {
+function save_reaction_callback($request)
+{
+  if (empty($request->get_param('id')) || empty($request->get_param('type'))) {
     return;
   }
 
-  $id = sanitize_key( $request->get_param( 'id' ) );
-  $type = sanitize_key( $request->get_param( 'type' ) );
-  $current_user = $request->get_param( 'visitorId' ) ? sanitize_key( $request->get_param( 'visitorId' ) ) : get_current_user_id();
+  $id = sanitize_key($request->get_param('id'));
+  $type = sanitize_key($request->get_param('type'));
+  $visitor_id = $request->get_param('visitorId');
+  $current_user_id = get_current_user_id();
 
-  save_reaction( $id, $current_user, $type );
+  // Debug logging
+  error_log('Air Reactions Debug: Received visitor ID: ' . var_export($visitor_id, true));
+  error_log('Air Reactions Debug: Current user ID: ' . var_export($current_user_id, true));
+
+  $current_user = $visitor_id ? sanitize_key($visitor_id) : $current_user_id;
+
+  error_log('Air Reactions Debug: Final user ID to save: ' . var_export($current_user, true));
+
+  save_reaction($id, $current_user, $type);
 
   $response = [
-    'items' => count_post_reactions( $id ),
+    'items' => count_post_reactions($id),
   ];
 
   return $response;

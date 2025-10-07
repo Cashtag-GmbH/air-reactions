@@ -3,26 +3,34 @@
  */
 export default class AirReaction {
   constructor(reactionElement, api, settings) {
-    if (! ('airReactionId' in reactionElement.dataset)) {
+    if (!("airReactionId" in reactionElement.dataset)) {
       return false;
     }
-    this.reactedClass = 'air-reactions__item--reacted';
-    this.api          = api;
-    this.elem         = reactionElement;
-    this.id           = reactionElement.dataset.airReactionId;
-    this.storageKey   = `air-reaction-${this.id}`;
-    this.userReaction = 'airReactionUserReaction' in reactionElement.dataset && reactionElement.dataset.airReactionUserReaction !== 'false' ? reactionElement.dataset.airReactionUserReaction : false;
-    this.user         = 'airReactionUser' in reactionElement.dataset ? parseInt( reactionElement.dataset.airReactionUser, 10 ) : 0;
-    this.settings     = settings;
-    this.items        = this.buildItems();
+    this.reactedClass = "air-reactions__item--reacted";
+    this.api = api;
+    this.elem = reactionElement;
+    this.id = reactionElement.dataset.airReactionId;
+    this.storageKey = `air-reaction-${this.id}`;
+    this.userReaction =
+      "airReactionUserReaction" in reactionElement.dataset &&
+      reactionElement.dataset.airReactionUserReaction !== "false"
+        ? reactionElement.dataset.airReactionUserReaction
+        : false;
+    this.user =
+      "airReactionUser" in reactionElement.dataset
+        ? parseInt(reactionElement.dataset.airReactionUser, 10)
+        : 0;
+    this.settings = settings;
+    this.items = this.buildItems();
 
     this.items.forEach((item) => {
-      item.reactionButton.addEventListener('click', () => {
-        const elem = document.querySelector(`[data-air-reaction-id="${this.id}"]`);
-        if (elem && 'airReaction' in elem) {
-
-          if ( elem.userReaction === item.reactionType ) {
-              // If already reacted, toggle false value
+      item.reactionButton.addEventListener("click", () => {
+        const elem = document.querySelector(
+          `[data-air-reaction-id="${this.id}"]`
+        );
+        if (elem && "airReaction" in elem) {
+          if (elem.userReaction === item.reactionType) {
+            // If already reacted, toggle false value
             elem.airReaction.toggle(false);
           } else {
             elem.airReaction.toggle(item.reactionType);
@@ -35,26 +43,32 @@ export default class AirReaction {
    * Build items, check that they have all the necessary properties to carry on
    */
   buildItems() {
-    const itemElements = [...this.elem.querySelectorAll('[data-air-reaction-item]')];
+    const itemElements = [
+      ...this.elem.querySelectorAll("[data-air-reaction-item]"),
+    ];
 
     const items = [];
 
     for (let index = 0; index < itemElements.length; index++) {
       const itemElement = itemElements[index];
 
-      if ( ! ('airReactionItem' in itemElement.dataset)) {
-        console.warn('"data-air-reaction-item" attribute is missing from reaction-item element');
+      if (!("airReactionItem" in itemElement.dataset)) {
+        console.warn(
+          '"data-air-reaction-item" attribute is missing from reaction-item element'
+        );
         continue;
       }
 
-      const button = itemElement.querySelector('button');
+      const button = itemElement.querySelector("button");
 
-      if (! button || typeof button === 'undefined') {
-        console.warn('button element is missing from reaction-item element');
+      if (!button || typeof button === "undefined") {
+        console.warn("button element is missing from reaction-item element");
         continue;
       }
 
-      const countElement = itemElement.querySelector('[data-air-reaction-count]');
+      const countElement = itemElement.querySelector(
+        "[data-air-reaction-count]"
+      );
 
       items.push({
         reactionType: itemElement.dataset.airReactionItem,
@@ -76,14 +90,14 @@ export default class AirReaction {
     // Disable the button while we handle request
     currentItem.reactionButton.disabled = true;
 
-    if ( this.settings.requireLogin && ! this.user ) {
+    if (this.settings.requireLogin && !this.user) {
       this.showMessage(this.settings.loginRequiredMessage);
       currentItem.reactionButton.disabled = false;
       return;
     }
 
     // Add class so the user won't think the click didn't happen
-    currentItem.elem.classList.add( this.reactedClass );
+    currentItem.elem.classList.add(this.reactedClass);
 
     const formData = {
       id: this.id,
@@ -91,14 +105,20 @@ export default class AirReaction {
     };
 
     // Use visitor thumbnail for user id
-    if ( ! this.user ) {
+    if (!this.user) {
       formData.visitorId = this.settings.visitorId;
+      console.log("Air Reactions: Using visitor ID:", this.settings.visitorId);
+    } else {
+      console.log("Air Reactions: Using logged-in user ID:", this.user);
     }
 
-    this.api.post('/add-reaction', formData)
+    console.log("Air Reactions: Sending form data:", formData);
+
+    this.api
+      .post("/add-reaction", formData)
       .then((response) => {
         this.toggleReaction(type);
-        if ( 'items' in response.data ) {
+        if ("items" in response.data) {
           this.updateCount(response.data.items);
         }
         currentItem.reactionButton.disabled = false;
@@ -108,16 +128,15 @@ export default class AirReaction {
         console.log(error);
 
         // Remove class we added when we started to toggle
-        currentItem.elem.classList.remove( this.reactedClass );
+        currentItem.elem.classList.remove(this.reactedClass);
         currentItem.reactionButton.disabled = false;
-    });
-
+      });
   }
   /**
    * Get the cookie from the storage
    */
   getCookie() {
-    if (! ('localStorage' in window) || this.settings.requireLogin) {
+    if (!("localStorage" in window) || this.settings.requireLogin) {
       return false;
     }
     return localStorage.getItem(this.storageKey);
@@ -129,17 +148,17 @@ export default class AirReaction {
    * @param {mixed} value The value to save to cookie
    */
   setCookie(value) {
-    if (! ('localStorage' in window) || this.settings.requireLogin) {
+    if (!("localStorage" in window) || this.settings.requireLogin) {
       return;
     }
     localStorage.setItem(this.storageKey, value);
   }
 
-    /**
+  /**
    * Remove cookie
    */
   removeCookie(value) {
-    if (! ('localStorage' in window) || this.settings.requireLogin) {
+    if (!("localStorage" in window) || this.settings.requireLogin) {
       return;
     }
     localStorage.removeItem(this.storageKey);
@@ -170,11 +189,10 @@ export default class AirReaction {
       const newReactedItem = this.findItem(type);
       this.addReaction(newReactedItem);
     }
-
   }
 
   findItem(type) {
-    return this.items.find(item => item.reactionType === type);
+    return this.items.find((item) => item.reactionType === type);
   }
 
   addReaction(item) {
@@ -186,13 +204,13 @@ export default class AirReaction {
 
   removeReaction(item) {
     item.elem.classList.remove(this.reactedClass);
-    this.userReaction = '';
-    this.elem.dataset.userReaction = '';
+    this.userReaction = "";
+    this.elem.dataset.userReaction = "";
     this.removeCookie();
   }
 
   updateCount(items) {
-    const itemValues = Object.values(items)
+    const itemValues = Object.values(items);
     const itemKeys = Object.keys(items);
 
     for (let index = 0; index < itemKeys.length; index++) {
@@ -201,14 +219,16 @@ export default class AirReaction {
       const itemCountElem = item?.countElem || false;
       // If false, this means that there's no count element
       // because it's disabled
-      if (! itemCountElem) {
+      if (!itemCountElem) {
         continue;
       }
 
       const reactionCount = item?.countElem?.dataset?.airReactionCount || false;
 
-      if (! reactionCount) {
-        console.warn('count element is missing or it doesnt have "data-air-reaction-count" attribute');
+      if (!reactionCount) {
+        console.warn(
+          'count element is missing or it doesnt have "data-air-reaction-count" attribute'
+        );
         continue;
       }
       const itemCount = parseInt(itemValues[index]);
@@ -220,11 +240,11 @@ export default class AirReaction {
 
   showMessage(message) {
     // Show this only once
-    if ( this.elem.querySelector( 'p.error-message' ) ) {
+    if (this.elem.querySelector("p.error-message")) {
       return;
     }
-    const messageElem = document.createElement('p');
-    messageElem.classList.add( 'error-message');
+    const messageElem = document.createElement("p");
+    messageElem.classList.add("error-message");
     messageElem.innerHTML = message;
     this.elem.appendChild(messageElem);
   }
