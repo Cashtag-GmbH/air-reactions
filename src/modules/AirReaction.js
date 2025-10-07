@@ -107,12 +107,7 @@ export default class AirReaction {
     // Use visitor thumbnail for user id
     if (!this.user) {
       formData.visitorId = this.settings.visitorId;
-      console.log("Air Reactions: Using visitor ID:", this.settings.visitorId);
-    } else {
-      console.log("Air Reactions: Using logged-in user ID:", this.user);
     }
-
-    console.log("Air Reactions: Sending form data:", formData);
 
     this.api
       .post("/add-reaction", formData)

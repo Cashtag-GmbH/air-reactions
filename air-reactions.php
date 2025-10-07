@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Plugin Name: Air Reactions
  * Description: A developer-friendly WordPress-plugin for adding customizable reactions (reactions, hearts, disreactions, shrugs or whatever you feel reaction) to your content.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Digitoimisto Dude Oy, Niku Hietanen
  * Author URI: https://www.dude.fi
  * Requires at least: 5.0
@@ -18,7 +19,7 @@
 
 namespace Air_Reactions;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
   exit();
 }
 
@@ -31,23 +32,23 @@ const DEFAULT_REQUIRE_LOGIN = false;
 /**
  * Plugin setup, script registering etc.
  */
-require plugin_dir_path( __FILE__ ) . 'inc/setup.php';
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
-add_shortcode( 'air-reactions', __NAMESPACE__ . '\register_shortcode' );
+require plugin_dir_path(__FILE__) . 'inc/setup.php';
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts');
+add_shortcode('air-reactions', __NAMESPACE__ . '\register_shortcode');
 
 /**
  * API related
  */
-require plugin_dir_path( __FILE__ ) . 'inc/api.php';
-add_action( 'rest_api_init', __NAMESPACE__ . '\register_reaction_api' );
+require plugin_dir_path(__FILE__) . 'inc/api.php';
+add_action('rest_api_init', __NAMESPACE__ . '\register_reaction_api');
 
 /**
  * Helper functions
  */
-require plugin_dir_path( __FILE__ ) . 'inc/helpers.php';
+require plugin_dir_path(__FILE__) . 'inc/helpers.php';
 
 /**
  * Plugin output
  */
-require plugin_dir_path( __FILE__ ) . 'inc/output.php';
-add_action( 'air_reactions_display', __NAMESPACE__ . '\the_output', 1, 2 );
+require plugin_dir_path(__FILE__) . 'inc/output.php';
+add_action('air_reactions_display', __NAMESPACE__ . '\the_output', 1, 2);

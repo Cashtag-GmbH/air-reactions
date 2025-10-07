@@ -42,13 +42,7 @@ function save_reaction_callback($request)
   $visitor_id = $request->get_param('visitorId');
   $current_user_id = get_current_user_id();
 
-  // Debug logging
-  error_log('Air Reactions Debug: Received visitor ID: ' . var_export($visitor_id, true));
-  error_log('Air Reactions Debug: Current user ID: ' . var_export($current_user_id, true));
-
   $current_user = $visitor_id ? sanitize_key($visitor_id) : $current_user_id;
-
-  error_log('Air Reactions Debug: Final user ID to save: ' . var_export($current_user, true));
 
   save_reaction($id, $current_user, $type);
 

@@ -135,13 +135,9 @@ function is_post_type_allowed($post_id)
  */
 function save_reaction($post_id, $user_id, string $type)
 {
-  error_log('Air Reactions Debug: save_reaction called with - Post ID: ' . var_export($post_id, true) . ', User ID: ' . var_export($user_id, true) . ', Type: ' . var_export($type, true));
-
   $meta = is_comment($post_id) ? get_comment_meta(parse_comment_id($post_id), META_FIELD_KEY, true) : get_post_meta($post_id, META_FIELD_KEY, true);
 
   $post_reactions = is_array($meta) ? $meta : [];
-
-  error_log('Air Reactions Debug: Current post reactions before save: ' . var_export($post_reactions, true));
 
   // Check if user already reacted and is now trying to reverse the reaction
   if (! empty($post_reactions[$user_id]) && $post_reactions[$user_id] === $type) {
@@ -150,19 +146,14 @@ function save_reaction($post_id, $user_id, string $type)
     $post_reactions[$user_id] = $type;
   }
 
-  error_log('Air Reactions Debug: Post reactions after modification: ' . var_export($post_reactions, true));
-
   if (is_comment($post_id)) {
-    $result = update_comment_meta(parse_comment_id($post_id), META_FIELD_KEY, $post_reactions);
+    update_comment_meta(parse_comment_id($post_id), META_FIELD_KEY, $post_reactions);
   } else {
-    $result = update_post_meta($post_id, META_FIELD_KEY, $post_reactions);
+    update_post_meta($post_id, META_FIELD_KEY, $post_reactions);
   }
-
-  error_log('Air Reactions Debug: update_post_meta result: ' . var_export($result, true));
 
   // Check if this is an actual user and save to user meta as well
   if (! get_user_by('id', $user_id)) {
-    error_log('Air Reactions Debug: Not a real user, skipping user meta save for: ' . var_export($user_id, true));
     return;
   }
 
