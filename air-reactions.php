@@ -52,3 +52,10 @@ require plugin_dir_path(__FILE__) . 'inc/helpers.php';
  */
 require plugin_dir_path(__FILE__) . 'inc/output.php';
 add_action('air_reactions_display', __NAMESPACE__ . '\the_output', 1, 2);
+
+/**
+ * REST API Extension - Expose reaction counts in WP REST API
+ */
+require plugin_dir_path(__FILE__) . 'inc/rest-api-extension.php';
+add_action('rest_api_init', __NAMESPACE__ . '\register_rest_api_fields');
+add_action('rest_api_init', __NAMESPACE__ . '\register_bulk_reactions_endpoint');
